@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
-
+import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -59,7 +59,15 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            ArrayList weekForcast = new ArrayList();
+            weekForcast.add("Today Cold -1");
+            weekForcast.add("Tommorrow still cold -2");
+            weekForcast.add("Wednesday bit warmer 4");
+            weekForcast.add("Thursday warming up 10");
+            weekForcast.add("Friday wow its 15");
+            weekForcast.add("Saturday springs here, its 19");
+            weekForcast.add("Sunday sunscreen alert its 23!");
+             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
     }
