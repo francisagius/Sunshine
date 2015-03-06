@@ -22,7 +22,7 @@ public class MainActivity extends ActionBarActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-       return true;
+        return true;
     }
 
     @Override
@@ -36,9 +36,7 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-        if (id == R.id.action_refresh) {
-            return true;
-        }
+
         return super.onOptionsItemSelected(item);
     }
 
