@@ -7,4 +7,5 @@
     <string name="weathertemp">22 (in the shade)</string>
     <string name="weatherdate">12 September</string>
     <string name="list_item_forcast_text">Today Sunny 91</string>
+    <string name="title_activity_detail">DetailActivity</string>
 </resources>

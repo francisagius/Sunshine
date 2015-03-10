@@ -1,5 +1,6 @@
 package com.example.fran.sunshine.app;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -118,6 +119,13 @@ public class ForecastFragment extends Fragment {
 
                 String forecast = mForecastAdapter.getItem(i);
                 Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT).show();
+                //
+                System.out.println("Hi detail " + forecast);
+                Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+                // detailIntent.putExtra("forecastkey", forecast);
+                detailIntent.putExtra(Intent.EXTRA_TEXT, forecast);
+                startActivity(detailIntent);
+                //
             }
         });
 
@@ -167,7 +175,10 @@ public class ForecastFragment extends Fragment {
             final String OWM_MAX = "max";
             final String OWM_MIN = "min";
             final String OWM_DESCRIPTION = "main";
-
+            // detail
+            final String OWM_PRESSURE = "pressure";
+            final String OWM_HUMIDITY = "humidity";
+            final String OWM_WINDSPEED = "speed";
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
@@ -194,9 +205,25 @@ public class ForecastFragment extends Fragment {
                 String day;
                 String description;
                 String highAndLow;
+                //
+                double pressure;
+                double humidity;
+                double windspeed;
 
                 // Get the JSON object representing the day
                 JSONObject dayForecast = weatherArray.getJSONObject(i);
+
+                // Get pressure
+                pressure = dayForecast.getDouble(OWM_PRESSURE);
+                System.out.println("pressure " + pressure);
+                // Get humidity
+                humidity = dayForecast.getDouble(OWM_HUMIDITY);
+                System.out.println("humidity " + humidity);
+
+                // Get windspeed
+                windspeed = dayForecast.getDouble(OWM_WINDSPEED);
+                System.out.println("windspeed " + windspeed);
+
 
                 // The date/time is returned as a long.  We need to convert that
                 // into something human-readable, since most people won't read "1400356800" as
@@ -205,6 +232,8 @@ public class ForecastFragment extends Fragment {
                 // Cheating to convert this to UTC time, which is what we want anyhow
                 dateTime = dayTime.setJulianDay(julianStartDay + i);
                 day = getReadableDateString(dateTime);
+                // pressure
+
 
                 // description is in a child array called "weather", which is 1 element long.
                 JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
@@ -218,6 +247,9 @@ public class ForecastFragment extends Fragment {
 
                 highAndLow = formatHighLows(high, low);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
+                //
+                // add detailStrs here and use with DetailActivity? ?
+                //
             }
 
             //  for (String s : resultStrs) {
