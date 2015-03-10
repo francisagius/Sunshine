@@ -123,7 +123,8 @@ public class ForecastFragment extends Fragment {
                 System.out.println("Hi detail " + forecast);
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
                 // detailIntent.putExtra("forecastkey", forecast);
-                detailIntent.putExtra(Intent.EXTRA_TEXT, forecast);
+                detailIntent.putExtra("TEXT1", forecast);
+                detailIntent.putExtra("TEXT2", forecast);
                 startActivity(detailIntent);
                 //
             }
@@ -200,6 +201,7 @@ public class ForecastFragment extends Fragment {
             dayTime = new Time();
 
             String[] resultStrs = new String[numDays];
+            String[] detailStrs = new String[numDays];
             for (int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
@@ -246,8 +248,9 @@ public class ForecastFragment extends Fragment {
                 double low = temperatureObject.getDouble(OWM_MIN);
 
                 highAndLow = formatHighLows(high, low);
-                resultStrs[i] = day + " - " + description + " - " + highAndLow;
+                resultStrs[i] = day + " - " + description + " - " + highAndLow + " - " + pressure + " - " + humidity + " - " + windspeed;
                 //
+                //  resultStrs[i] = pressure + " - " + humidity + " - " + windspeed;
                 // add detailStrs here and use with DetailActivity? ?
                 //
             }

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 public class DetailActivity extends ActionBarActivity {
@@ -22,9 +23,7 @@ public class DetailActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-        Intent detailIntent = getIntent();
-        String detailforecast = detailIntent.getStringExtra(Intent.EXTRA_TEXT);
-        System.out.println("at detail activity: " + detailforecast);
+
     }
 
 
@@ -61,7 +60,14 @@ public class DetailActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+            Intent detailIntent = getActivity().getIntent();
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            if (detailIntent != null && detailIntent.hasExtra("TEXT2")) {
+                String detailforecast = detailIntent.getStringExtra("TEXT2");
+                ((TextView) rootView.findViewById(R.id.detail_text)).setText(detailforecast);
+                //
+                System.out.println("at detail activity: " + detailforecast);
+            }
 
             return rootView;
         }
