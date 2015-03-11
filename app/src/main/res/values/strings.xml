@@ -7,5 +7,13 @@
     <string name="weathertemp">22 (in the shade)</string>
     <string name="weatherdate">12 September</string>
     <string name="list_item_forcast_text">Today Sunny 91</string>
-    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_activity_detail">Detail Activity</string>
+
+    <string name="pref_location_key">Location</string>
+    <string name="pref_location_lable">location</string>
+    <string name="pref_location_default">Euxton,UK</string>
+
+
+
+
 </resources>
