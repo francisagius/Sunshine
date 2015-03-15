@@ -142,9 +142,11 @@ public class ForecastFragment extends Fragment {
         // get location setting
         //   weatherTask.execute("euxton");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
+        String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        String temperature_units = prefs.getString("Temperature","cant get temp units");
+        System.out.println("temp_pref "+temperature_units);
         weatherTask.execute(location);
+       // weatherTask.execute("euxton");
     }
 
     @Override
@@ -171,10 +173,26 @@ public class ForecastFragment extends Fragment {
         /**
          * Prepare the weather high/lows for presentation.
          */
-        private String formatHighLows(double high, double low) {
+
+
+        private String formatHighLows(double high, double low, String unitType) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+
+            System.out.println("h L temp_pref "+unitType);
+            if(unitType.equals("I")){
+                System.out.println("high "+high);
+                System.out.println("low "+low);
+                high = ((high*9.0)/5.0)+32.0;
+                low = ((low*9.0)/5.0)+32.0;
+                System.out.println("temp.. after convert ..");
+                System.out.println("temp high "+high);
+                System.out.println("temp low "+low);
+
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
+
 
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
@@ -214,6 +232,8 @@ public class ForecastFragment extends Fragment {
 
             Time dayTime = new Time();
             dayTime.setToNow();
+
+
 
             // we start at the day returned by local time. Otherwise this is a mess.
             int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
@@ -268,7 +288,11 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
-                highAndLow = formatHighLows(high, low);
+
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String unitType = prefs.getString("Temperature","cant get temp units");
+                System.out.println("temp "+ unitType);
+                highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow + " - " + pressure + " - " + humidity + " - " + windspeed;
                 //
                 //  resultStrs[i] = pressure + " - " + humidity + " - " + windspeed;
@@ -313,7 +337,7 @@ public class ForecastFragment extends Fragment {
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM = "cnt";
-
+                // api key +"&APPID="
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, format)
@@ -323,7 +347,7 @@ public class ForecastFragment extends Fragment {
 
                 URL url = new URL(builtUri.toString());
 
-                //Log.v(LOG_TAG, "Built URI " + builtUri.toString());
+                Log.v(LOG_TAG, "Built URI " + builtUri.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
