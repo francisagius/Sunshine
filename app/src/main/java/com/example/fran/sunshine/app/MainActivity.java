@@ -1,7 +1,10 @@
 package com.example.fran.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,8 +47,35 @@ public class MainActivity extends ActionBarActivity {
 
             return true;
         }
+        if (id == R.id.action_map_location) {
 
+            //
+            //Intent settingIntent = new Intent(this, SettingsActivity.class);
+            //startActivity(settingIntent);
+            System.out.println("map show me the map please!");
+            //String geoLocation = "geo:0,0?q=11+Earlsway%2C+Euxton";
+           // space %20
+           // comma %2C
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+            System.out.println("map and the location is..."+location);
+           String GEO_STUB = "geo:0,0?q=";
+           String geoLocation = String.format("%s%s", GEO_STUB, location);
+            System.out.println("map geoLocation str..."+geoLocation);
+           showMap(Uri.parse(geoLocation));
+
+            //
+
+            return true;
+        }
         return super.onOptionsItemSelected(item);
+    }
+    public void showMap(Uri geoLocation) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
 }
