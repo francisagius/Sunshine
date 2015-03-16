@@ -10,6 +10,8 @@
     <string name="list_item_forcast_text">Today Sunny 91</string>
     <string name="title_activity_detail">Detail Activity</string>
 
+    <string name="menu_title_share">Share</string>
+
     <string name="pref_location_key">Location</string>
     <string name="pref_location_lable">location</string>
     <string name="pref_location_default">Euxton,UK</string>

@@ -10,8 +10,6 @@ import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,11 +49,6 @@ public class ForecastFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.forecastfragment, menu);
     }
 
     SharedPreferences sharedpreferences;
@@ -123,14 +116,12 @@ public class ForecastFragment extends Fragment {
 
                 String forecast = mForecastAdapter.getItem(i);
                 Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT).show();
-                //
                 System.out.println("Hi detail " + forecast);
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
                 // detailIntent.putExtra("forecastkey", forecast);
                 detailIntent.putExtra("TEXT1", forecast);
                 detailIntent.putExtra("TEXT2", forecast);
                 startActivity(detailIntent);
-                //
             }
         });
 
@@ -139,14 +130,11 @@ public class ForecastFragment extends Fragment {
 
     private void updateWeather() {
         FetchWeatherTask weatherTask = new FetchWeatherTask();
-        // get location setting
-        //   weatherTask.execute("euxton");
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
-        String temperature_units = prefs.getString("Temperature","cant get temp units");
-        System.out.println("temp_pref "+temperature_units);
+        String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        String temperature_units = prefs.getString("Temperature", "cant get temp units");
+        System.out.println("temp_pref " + temperature_units);
         weatherTask.execute(location);
-       // weatherTask.execute("euxton");
     }
 
     @Override
@@ -178,22 +166,19 @@ public class ForecastFragment extends Fragment {
         private String formatHighLows(double high, double low, String unitType) {
             // For presentation, assume the user doesn't care about tenths of a degree.
 
-            System.out.println("h L temp_pref "+unitType);
-            if(unitType.equals("I")){
-                System.out.println("high "+high);
-                System.out.println("low "+low);
-                high = ((high*9.0)/5.0)+32.0;
-                low = ((low*9.0)/5.0)+32.0;
+            System.out.println("h L temp_pref " + unitType);
+            if (unitType.equals("I")) {
+                System.out.println("high " + high);
+                System.out.println("low " + low);
+                high = ((high * 9.0) / 5.0) + 32.0;
+                low = ((low * 9.0) / 5.0) + 32.0;
                 System.out.println("temp.. after convert ..");
-                System.out.println("temp high "+high);
-                System.out.println("temp low "+low);
-
+                System.out.println("temp high " + high);
+                System.out.println("temp low " + low);
             }
 
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
-
-
             String highLowStr = roundedHigh + "/" + roundedLow;
             return highLowStr;
         }
@@ -233,8 +218,6 @@ public class ForecastFragment extends Fragment {
             Time dayTime = new Time();
             dayTime.setToNow();
 
-
-
             // we start at the day returned by local time. Otherwise this is a mess.
             int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
 
@@ -267,7 +250,6 @@ public class ForecastFragment extends Fragment {
                 windspeed = dayForecast.getDouble(OWM_WINDSPEED);
                 System.out.println("windspeed " + windspeed);
 
-
                 // The date/time is returned as a long.  We need to convert that
                 // into something human-readable, since most people won't read "1400356800" as
                 // "this saturday".
@@ -276,7 +258,6 @@ public class ForecastFragment extends Fragment {
                 dateTime = dayTime.setJulianDay(julianStartDay + i);
                 day = getReadableDateString(dateTime);
                 // pressure
-
 
                 // description is in a child array called "weather", which is 1 element long.
                 JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
@@ -290,8 +271,8 @@ public class ForecastFragment extends Fragment {
 
 
                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                String unitType = prefs.getString("Temperature","cant get temp units");
-                System.out.println("temp "+ unitType);
+                String unitType = prefs.getString("Temperature", "cant get temp units");
+                System.out.println("temp " + unitType);
                 highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow + " - " + pressure + " - " + humidity + " - " + windspeed;
                 //
@@ -304,7 +285,6 @@ public class ForecastFragment extends Fragment {
             //      Log.v(LOG_TAG, "Forecast entry: " + s);
             //  }
             return resultStrs;
-
         }
 
         @Override
@@ -337,7 +317,7 @@ public class ForecastFragment extends Fragment {
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM = "cnt";
-                // api key +"&APPID="
+                // api key +"&APPID=" ??
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                         .appendQueryParameter(QUERY_PARAM, params[0])
                         .appendQueryParameter(FORMAT_PARAM, format)
