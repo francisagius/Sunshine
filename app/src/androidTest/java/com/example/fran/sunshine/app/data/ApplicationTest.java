@@ -1,4 +1,4 @@
-package com.example.fran.sunshine.app;
+package com.example.fran.sunshine.app.data;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

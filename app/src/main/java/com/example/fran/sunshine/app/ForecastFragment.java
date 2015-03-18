@@ -136,13 +136,39 @@ public class ForecastFragment extends Fragment {
         System.out.println("temp_pref " + temperature_units);
         weatherTask.execute(location);
     }
-
+    private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
     @Override
     public void onStart() {
         super.onStart();
+        Log.v(LOG_TAG, "lifecycle: onStart");
         updateWeather();
     }
-
+  // application lifecycle
+  @Override
+  public void onResume() {
+      super.onResume();
+      // The activity has become visible (it is now "resumed").
+      Log.v(LOG_TAG, "lifecycle: onResume");
+  }
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Another activity is taking focus (this activity is about to be "paused").
+        Log.v(LOG_TAG, "lifecycle: onPause");
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        // The activity is no longer visible (it is now "stopped")
+        Log.v(LOG_TAG, "lifecycle: onStop");
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        // The activity is about to be destroyed.
+        Log.v(LOG_TAG, "lifecycle: onDestroy");
+    }
+ //
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
