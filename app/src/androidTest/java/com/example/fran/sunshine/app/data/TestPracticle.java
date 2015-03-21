@@ -2,6 +2,7 @@
  * Created by fran on 18/03/2015.
  */
 package com.example.fran.sunshine.app.data;
+
 import android.test.AndroidTestCase;
 
 public class TestPracticle extends AndroidTestCase {
