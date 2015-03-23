@@ -19,5 +19,8 @@
     <string name="pref_temperature_units_key">Temperature</string>
     <string name="pref_temperature_label">Temperature Units</string>
     <string name="pref_temperature_default">Metric</string>
+    <string name="pref_units_imperial">I</string>
+    <string name="pref_units_metric">M</string>
+
 
 </resources>

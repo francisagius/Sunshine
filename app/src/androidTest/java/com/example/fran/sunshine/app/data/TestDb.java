@@ -147,7 +147,7 @@ public class TestDb extends AndroidTestCase {
         db.close();*/
 // Move code above to a re usable block below
 
-       insertLocation();
+        insertLocation();
 
 //
 
