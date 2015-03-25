@@ -1,32 +1,26 @@
 package com.example.fran.sunshine.app;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
+import com.example.fran.sunshine.app.data.WeatherContract;
 /**
  * Encapsulates fetching the forecast and displaying it as a {@link ListView} layout.
  */
 public class ForecastFragment extends Fragment {
 
     //private ArrayAdapter<String> mForecastAdapter;
-    public ArrayAdapter<String> mForecastAdapter;
-
+    //public ArrayAdapter<String> mForecastAdapter;
+    private ForecastAdapter mForecastAdapter;
     public ForecastFragment() {
     }
 
@@ -35,6 +29,7 @@ public class ForecastFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+        String locationSetting = Utility.getPreferredLocation(getActivity());
     }
 
     SharedPreferences sharedpreferences;
@@ -56,7 +51,7 @@ public class ForecastFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        String locationSetting = Utility.getPreferredLocation(getActivity());
         // Create some dummy data for the ListView.  Here's a sample weekly forecast
 
         // replaced solution below with course 'String[] data' solution..
@@ -70,46 +65,57 @@ public class ForecastFragment extends Fragment {
         //weekForcast.add("Sunday sunscreen alert its 23!");
         //List<String> weekForecast = new ArrayList<String>(weekForcast);
 
-        String[] data = {
-                "Today Cold -1C",
-                "Tommorrow still cold -2C",
-                "Wednesday bit warmer 4C",
-                "Thursday warming up 10C",
-                "Friday wow its 15C",
-                "Saturday springs is here, its 19C",
-                "Sunday sunscreen alert its 23C !"
-        };
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
+//        String[] data = {
+//                "Today Cold -1C",
+//                "Tommorrow still cold -2C",
+//                "Wednesday bit warmer 4C",
+//                "Thursday warming up 10C",
+//                "Friday wow its 15C",
+//                "Saturday springs is here, its 19C",
+//                "Sunday sunscreen alert its 23C !"
+//        };
+//        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
 
         // Now that we have some dummy forecast data, create an ArrayAdapter.
         // The ArrayAdapter will take data from a source (like our dummy forecast) and
         // use it to populate the ListView it's attached to.
-        mForecastAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(), // The current context (this activity)
-                        R.layout.list_item_forcast, // The name of the layout ID.
-                        R.id.list_item_forecast_textview, // The ID of the textview to populate.
-                        weekForecast);
+//        mForecastAdapter =
+//                new ArrayAdapter<String>(
+//                        getActivity(), // The current context (this activity)
+//                        R.layout.list_item_forcast, // The name of the layout ID.
+//                        R.id.list_item_forecast_textview, // The ID of the textview to populate.
+//                        weekForecast);
+        // Sort order:  Ascending, by date.
+               String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+               Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                       locationSetting, System.currentTimeMillis());
 
+                        Cursor cur = getActivity().getContentResolver().query(weatherForLocationUri,
+                                null, null, null, sortOrder);
+
+                        // The CursorAdapter will take data from our cursor and populate the ListView
+                                // However, we cannot use FLAG_AUTO_REQUERY since it is deprecated, so we will end
+                                        // up with an empty list the first time we run.
+                                        mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
         // Get a reference to the ListView, and attach this adapter to it.
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forcast);
         listView.setAdapter(mForecastAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                String forecast = mForecastAdapter.getItem(i);
-                Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT).show();
-                System.out.println("Hi detail " + forecast);
-                Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
-                // detailIntent.putExtra("forecastkey", forecast);
-                detailIntent.putExtra("TEXT1", forecast);
-                detailIntent.putExtra("TEXT2", forecast);
-                startActivity(detailIntent);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//
+//                String forecast = mForecastAdapter.getItem(i);
+//                Toast.makeText(getActivity(), forecast, Toast.LENGTH_SHORT).show();
+//                System.out.println("Hi detail " + forecast);
+//                Intent detailIntent = new Intent(getActivity(), DetailActivity.class);
+//                // detailIntent.putExtra("forecastkey", forecast);
+//                detailIntent.putExtra("TEXT1", forecast);
+//                detailIntent.putExtra("TEXT2", forecast);
+//                startActivity(detailIntent);
+//            }
+//        });
 
         return rootView;
     }
@@ -125,10 +131,14 @@ public class ForecastFragment extends Fragment {
     }*/
 
     private void updateWeather() {
-        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(), mForecastAdapter);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        String location = prefs.getString(getString(R.string.pref_location_key),
-                getString(R.string.pref_location_default));
+//        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(), mForecastAdapter);
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        String location = prefs.getString(getString(R.string.pref_location_key),
+//                getString(R.string.pref_location_default));
+
+
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity());
+        String location = Utility.getPreferredLocation(getActivity());
         weatherTask.execute(location);
     }
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();

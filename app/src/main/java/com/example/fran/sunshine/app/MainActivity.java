@@ -1,10 +1,8 @@
 package com.example.fran.sunshine.app;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,8 +54,10 @@ public class MainActivity extends ActionBarActivity {
             //String geoLocation = "geo:0,0?q=11+Earlsway%2C+Euxton";
             // space %20
             // comma %2C
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-            String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+           // SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+           // String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+
+            String location = Utility.getPreferredLocation(this);
             System.out.println("map and the location is..." + location);
             String GEO_STUB = "geo:0,0?q=";
             String geoLocation = String.format("%s%s", GEO_STUB, location);
