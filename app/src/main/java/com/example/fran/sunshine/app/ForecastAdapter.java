@@ -47,7 +47,6 @@ public class ForecastAdapter extends CursorAdapter {
                 " - " + cursor.getString(idx_short_desc) +
                 " - " + highAndLow;
     }
-
     /*
         Remember that these views are reused as needed.
      */
