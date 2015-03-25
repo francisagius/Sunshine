@@ -2,12 +2,9 @@ package com.example.fran.sunshine.app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,17 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -128,15 +114,25 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
-    private void updateWeather() {
+   /* private void updateWeather() {
         FetchWeatherTask weatherTask = new FetchWeatherTask();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String location = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
         String temperature_units = prefs.getString("Temperature", "cant get temp units");
         System.out.println("temp_pref " + temperature_units);
         weatherTask.execute(location);
+
+    }*/
+
+    private void updateWeather() {
+        FetchWeatherTask weatherTask = new FetchWeatherTask(getActivity(), mForecastAdapter);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = prefs.getString(getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default));
+        weatherTask.execute(location);
     }
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+
     @Override
     public void onStart() {
         super.onStart();
@@ -169,14 +165,15 @@ public class ForecastFragment extends Fragment {
         Log.v(LOG_TAG, "lifecycle: onDestroy");
     }
  //
-
+    // refactor fetchweathertask to use new class and content provider
+  /*
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
-        /* The date/time conversion code is going to be moved outside the asynctask later,
+        *//* The date/time conversion code is going to be moved outside the asynctask later,
          * so for convenience we're breaking it out into its own method now.
-         */
+         *//*
         private String getReadableDateString(long time) {
             // Because the API returns a unix timestamp (measured in seconds),
             // it must be converted to milliseconds in order to be converted to valid date.
@@ -184,9 +181,9 @@ public class ForecastFragment extends Fragment {
             return shortenedDateFormat.format(time);
         }
 
-        /**
+        *//**
          * Prepare the weather high/lows for presentation.
-         */
+         *//*
 
 
         private String formatHighLows(double high, double low, String unitType) {
@@ -209,13 +206,13 @@ public class ForecastFragment extends Fragment {
             return highLowStr;
         }
 
-        /**
+        *//**
          * Take the String representing the complete forecast in JSON Format and
          * pull out the data we need to construct the Strings needed for the wireframes.
          * <p/>
          * Fortunately parsing is easy:  constructor takes the JSON string and converts it
          * into an Object hierarchy for us.
-         */
+         *//*
         private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
                 throws JSONException {
 
@@ -424,4 +421,6 @@ public class ForecastFragment extends Fragment {
             }
         }
     }
+    */
+    // end of refactor
 }
